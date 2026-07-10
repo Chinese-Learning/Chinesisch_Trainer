@@ -1,1 +1,9 @@
-{"name":"Chinesisch Klausurtrainer","short_name":"Chinesisch","start_url":"./index.html","display":"standalone","background_color":"#ffffff","theme_color":"#111111","icons":[]}
+{
+  "name": "Chinese Exam Trainer",
+  "short_name": "Chinese Trainer",
+  "start_url": "./?v=3",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#111111",
+  "description": "Private Chinese flashcard and exam trainer for units 1 to 5."
+}

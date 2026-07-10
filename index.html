@@ -1,184 +1,48 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chinesisch Klausurtrainer</title>
-  <style>
-:root{--bg:#f6f6f6;--card:#fff;--txt:#111;--muted:#666;--line:#ddd;--ok:#0a7a2f;--bad:#b00020;--accent:#111}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans SC",sans-serif;background:var(--bg);color:var(--txt)}
-.topbar{padding:18px 18px 12px;background:#111;color:#fff;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.topbar h1{margin:0;font-size:22px}.topbar p{margin:4px 0 0;color:#ddd;font-size:13px}
-main{max-width:980px;margin:0 auto;padding:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}.stat b{font-size:20px}.stat span{display:block;color:var(--muted);font-size:12px}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.tabs button,.primary,.ghost,.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 13px;font-weight:650}.tabs button.active,.primary{background:#111;color:#fff;border-color:#111}.ghost{background:transparent;color:inherit;border-color:#777}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}.filters label{font-size:12px;color:var(--muted)}select,input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff}select{min-width:170px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;min-height:390px}.card{min-height:210px;border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#fafafa}.hanzi{font-size:44px;line-height:1.15;font-family:"Noto Sans SC",system-ui,sans-serif}.pinyin{font-size:18px;color:var(--muted);margin-top:8px}.meaning{font-size:20px;margin-top:10px}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.feedback{margin-top:12px;font-weight:700}.ok{color:var(--ok)}.bad{color:var(--bad)}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{cursor:pointer}.chip.used{opacity:.35}.target{min-height:55px;border:1px dashed #aaa;border-radius:14px;padding:10px;display:flex;gap:8px;flex-wrap:wrap;background:#fafafa}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}.table th{font-size:12px;color:var(--muted)}.small{font-size:13px;color:var(--muted)}.progressbar{height:9px;background:#eee;border-radius:99px;overflow:hidden;margin-top:6px}.progressbar span{display:block;height:100%;background:#111}.question{font-size:21px;font-weight:750;margin:8px 0 12px}.options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.options button{padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:16px;text-align:left}.source{font-size:12px;color:#777;margin-top:8px}.hidden{display:none}@media(max-width:650px){.stats{grid-template-columns:repeat(2,1fr)}.topbar{display:block}.options{grid-template-columns:1fr}.hanzi{font-size:38px}.panel{padding:12px}}
-
-  </style>
+  <meta name="theme-color" content="#111111" />
+  <title>Chinese Exam Trainer</title>
+  <link rel="manifest" href="manifest.json?v=3" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
   <header class="topbar">
     <div>
-      <h1>Chinesisch Klausurtrainer</h1>
-      <p>Einheit 1–5 · Flashcards · Satzbau · Lückentext · Klausurmodus</p>
+      <h1>Chinese Exam Trainer</h1>
+      <p>Units 1–5 · Flashcards · Sentences · Cloze · Exam mode</p>
     </div>
-    <button id="resetBtn" class="ghost" type="button">Fortschritt löschen</button>
+    <button id="resetBtn" class="ghost" type="button">Reset progress</button>
   </header>
 
   <main>
     <section class="stats" id="stats"></section>
 
-    <nav class="tabs">
+    <nav class="tabs" aria-label="Training modes">
       <button type="button" data-tab="cards" class="active">Flashcards</button>
-      <button type="button" data-tab="write">Schreiben</button>
-      <button type="button" data-tab="order">Satzbau</button>
-      <button type="button" data-tab="cloze">Lückentext</button>
-      <button type="button" data-tab="dialogue">Dialogfragen</button>
-      <button type="button" data-tab="exam">Klausurmodus</button>
-      <button type="button" data-tab="list">Vokabelliste</button>
+      <button type="button" data-tab="write">Writing</button>
+      <button type="button" data-tab="order">Sentence order</button>
+      <button type="button" data-tab="cloze">Cloze</button>
+      <button type="button" data-tab="dialogue">Dialogue</button>
+      <button type="button" data-tab="exam">Exam</button>
+      <button type="button" data-tab="list">Vocabulary</button>
     </nav>
 
     <section class="filters">
-      <label>Einheit
-        <select id="unitFilter"><option value="all">Alle</option></select>
+      <label>Unit
+        <select id="unitFilter"></select>
       </label>
-      <label>Richtung
-        <select id="directionFilter">
-          <option value="hanzi-de">Hanzi → Deutsch</option>
-          <option value="de-hanzi">Deutsch → Hanzi</option>
-          <option value="pinyin-hanzi">Pinyin → Hanzi</option>
-          <option value="mixed">Gemischt</option>
-        </select>
+      <label>Flashcard direction
+        <select id="directionFilter"></select>
       </label>
     </section>
 
     <section id="app" class="panel"></section>
   </main>
 
-  <script>
-const VOCAB = [
-// Einheit 1
-{u:1,h:'你好',p:'nǐ hǎo',d:'Hallo; Guten Tag'}, {u:1,h:'你',p:'nǐ',d:'du; dir; dich'}, {u:1,h:'好',p:'hǎo',d:'gut; OK'},
-{u:1,h:'请问',p:'qǐngwèn',d:'Darf ich fragen?'}, {u:1,h:'请',p:'qǐng',d:'bitten; einladen'}, {u:1,h:'问',p:'wèn',d:'fragen'},
-{u:1,h:'叫',p:'jiào',d:'heißen; rufen'}, {u:1,h:'什么',p:'shénme',d:'was; was für ein'}, {u:1,h:'名字',p:'míngzi',d:'Name'},
-{u:1,h:'我',p:'wǒ',d:'ich; mir; mich'}, {u:1,h:'他',p:'tā',d:'er; ihm; ihn'}, {u:1,h:'她',p:'tā',d:'sie; ihr'}, {u:1,h:'呢',p:'ne',d:'Fragepartikel'},
-{u:1,h:'认识',p:'rènshi',d:'kennen; erkennen'}, {u:1,h:'很',p:'hěn',d:'sehr'}, {u:1,h:'高兴',p:'gāoxìng',d:'erfreut sein'},
-{u:1,h:'小姐',p:'xiǎojiě',d:'Fräulein; junge Frau'}, {u:1,h:'对不起',p:'duìbuqǐ',d:'Entschuldigung'}, {u:1,h:'姓',p:'xìng',d:'Nachname; mit Nachnamen heißen'},
-{u:1,h:'中文',p:'Zhōngwén',d:'Chinesisch'}, {u:1,h:'你们',p:'nǐmen',d:'ihr; euch'}, {u:1,h:'是',p:'shì',d:'sein'}, {u:1,h:'大家',p:'dàjiā',d:'alle'},
-// Einheit 2
-{u:2,h:'早上好',p:'zǎoshang hǎo',d:'Guten Morgen'}, {u:2,h:'日本',p:'Rìběn',d:'Japan'}, {u:2,h:'人',p:'rén',d:'Mensch; Person'},
-{u:2,h:'吗',p:'ma',d:'Fragepartikel'}, {u:2,h:'不',p:'bù',d:'nicht'}, {u:2,h:'哪里',p:'nǎli',d:'wo; wohin'}, {u:2,h:'哪',p:'nǎ',d:'welcher/-e/-s'},
-{u:2,h:'中国',p:'Zhōngguó',d:'China'}, {u:2,h:'国',p:'guó',d:'Land; Staat; Nation'}, {u:2,h:'英国',p:'Yīngguó',d:'Großbritannien'},
-{u:2,h:'住',p:'zhù',d:'wohnen; leben'}, {u:2,h:'在',p:'zài',d:'in; an; sein'}, {u:2,h:'伦敦',p:'Lúndūn',d:'London'}, {u:2,h:'北京',p:'Běijīng',d:'Beijing'},
-{u:2,h:'他们',p:'tāmen',d:'sie; ihnen'}, {u:2,h:'电影',p:'diànyǐng',d:'Film'}, {u:2,h:'明星',p:'míngxīng',d:'Berühmtheit; Star'},
-{u:2,h:'但是',p:'dànshì',d:'aber'}, {u:2,h:'美国',p:'Měiguó',d:'Vereinigte Staaten von Amerika'}, {u:2,h:'青岛',p:'Qīngdǎo',d:'Qingdao'},
-{u:2,h:'香港',p:'Xiānggǎng',d:'Hongkong'}, {u:2,h:'法国',p:'Fǎguó',d:'Frankreich'}, {u:2,h:'德国',p:'Déguó',d:'Deutschland'},
-{u:2,h:'韩国',p:'Hánguó',d:'Korea'}, {u:2,h:'澳大利亚',p:'Àodàlìyà',d:'Australien'}, {u:2,h:'加拿大',p:'Jiānádà',d:'Kanada'}, {u:2,h:'瑞士',p:'Ruìshì',d:'Schweiz'},
-// Einheit 3
-{u:3,h:'爸爸',p:'bàba',d:'Papa; Vater'}, {u:3,h:'妈妈',p:'māma',d:'Mama; Mutter'}, {u:3,h:'姐姐',p:'jiějie',d:'ältere Schwester'},
-{u:3,h:'妹妹',p:'mèimei',d:'jüngere Schwester'}, {u:3,h:'哥哥',p:'gēge',d:'älterer Bruder'}, {u:3,h:'弟弟',p:'dìdi',d:'jüngerer Bruder'},
-{u:3,h:'这',p:'zhè',d:'diese/-r/-s'}, {u:3,h:'和',p:'hé',d:'und; mit'}, {u:3,h:'也',p:'yě',d:'auch'}, {u:3,h:'学生',p:'xuésheng',d:'Schüler/-in; Student/-in'},
-{u:3,h:'记者',p:'jìzhě',d:'Journalist/-in'}, {u:3,h:'做',p:'zuò',d:'machen'}, {u:3,h:'工作',p:'gōngzuò',d:'Arbeit; arbeiten'},
-{u:3,h:'医生',p:'yīshēng',d:'Arzt/Ärztin'}, {u:3,h:'医院',p:'yīyuàn',d:'Spital; Krankenhaus'}, {u:3,h:'都',p:'dōu',d:'alle; beide'},
-{u:3,h:'家',p:'jiā',d:'Familie; Zuhause'}, {u:3,h:'的',p:'de',d:'Partikel'}, {u:3,h:'照片',p:'zhàopiàn',d:'Fotografie'},
-{u:3,h:'学校',p:'xuéxiào',d:'Schule'}, {u:3,h:'老师',p:'lǎoshī',d:'Lehrer/-in'},
-// Einheit 4
-{u:4,h:'谁',p:'shéi',d:'wer; wen; wem'}, {u:4,h:'上海',p:'Shànghǎi',d:'Shanghai'}, {u:4,h:'现在',p:'xiànzài',d:'jetzt'},
-{u:4,h:'多大',p:'duō dà',d:'wie alt'}, {u:4,h:'岁',p:'suì',d:'Jahre alt'}, {u:4,h:'知道',p:'zhīdào',d:'wissen'}, {u:4,h:'真',p:'zhēn',d:'echt; wirklich'},
-{u:4,h:'高',p:'gāo',d:'groß; hoch sein'}, {u:4,h:'帅',p:'shuài',d:'gutaussehend sein'}, {u:4,h:'酷',p:'kù',d:'cool sein'}, {u:4,h:'最',p:'zuì',d:'Superlativbildung; am meisten'},
-{u:4,h:'喜欢',p:'xǐhuan',d:'mögen; gerne haben'}, {u:4,h:'篮球',p:'lánqiú',d:'Basketball'}, {u:4,h:'运动员',p:'yùndòngyuán',d:'Sportler/-in'},
-{u:4,h:'姓名',p:'xìngmíng',d:'Name und Vorname'}, {u:4,h:'年龄',p:'niánlíng',d:'Alter'}, {u:4,h:'出生地',p:'chūshēngdì',d:'Geburtsort'},
-{u:4,h:'国籍',p:'guójí',d:'Nationalität'}, {u:4,h:'电子邮箱',p:'diànzǐ yóuxiāng',d:'E-Mail-Adresse'}, {u:4,h:'动物',p:'dòngwù',d:'Tier'},
-{u:4,h:'熊猫',p:'xióngmāo',d:'Großer Panda'}, {u:4,h:'可爱',p:'kě’ài',d:'niedlich sein'}, {u:4,h:'演员',p:'yǎnyuán',d:'Schauspieler/-in'},
-{u:4,h:'年轻',p:'niánqīng',d:'jung'}, {u:4,h:'漂亮',p:'piàoliang',d:'hübsch'}, {u:4,h:'矮',p:'ǎi',d:'klein; niedrig'}, {u:4,h:'老',p:'lǎo',d:'alt'},
-// Einheit 5
-{u:5,h:'电话',p:'diànhuà',d:'Telefon'}, {u:5,h:'号码',p:'hàomǎ',d:'Nummer; Code'}, {u:5,h:'手机',p:'shǒujī',d:'Mobiltelefon'},
-{u:5,h:'多少',p:'duōshao',d:'wie viel; wie viele'}, {u:5,h:'公园',p:'gōngyuán',d:'Park'}, {u:5,h:'路',p:'lù',d:'Straße; Weg'}, {u:5,h:'号',p:'hào',d:'Nummer; Datum; mündlich'},
-{u:5,h:'新',p:'xīn',d:'neu sein'}, {u:5,h:'地址',p:'dìzhǐ',d:'Adresse'}, {u:5,h:'大学',p:'dàxué',d:'Universität'}, {u:5,h:'公寓',p:'gōngyù',d:'Wohnblock; Wohnhaus'},
-{u:5,h:'房间',p:'fángjiān',d:'Zimmer'}, {u:5,h:'可以',p:'kěyǐ',d:'können; dürfen'}, {u:5,h:'给',p:'gěi',d:'geben; für'},
-{u:5,h:'打电话',p:'dǎ diànhuà',d:'telefonieren'}, {u:5,h:'发件人',p:'fājiànrén',d:'Absender/-in'}, {u:5,h:'收到',p:'shōudào',d:'empfangen; erhalten'},
-{u:5,h:'谢谢',p:'xièxie',d:'danke; danken'}, {u:5,h:'收件箱',p:'shōujiànxiāng',d:'Posteingang'}, {u:5,h:'发送',p:'fāsòng',d:'senden'}, {u:5,h:'新短信',p:'xīn duǎnxìn',d:'neue Kurznachricht'}, {u:5,h:'退出',p:'tuìchū',d:'verlassen; beenden'}
-];
-
-const SENTENCES = [
-{u:1,h:'你好！',p:'Nǐ hǎo!',d:'Hallo!'}, {u:1,h:'请问，你叫什么名字？',p:'Qǐngwèn, nǐ jiào shénme míngzi?',d:'Darf ich fragen, wie du heißt?'},
-{u:1,h:'我叫王玉。',p:'Wǒ jiào Wáng Yù.',d:'Ich heiße Wang Yu.'}, {u:1,h:'你呢？',p:'Nǐ ne?',d:'Und du?'},
-{u:1,h:'认识你很高兴。',p:'Rènshi nǐ hěn gāoxìng.',d:'Freut mich, dich kennenzulernen.'}, {u:1,h:'对不起，我姓王。',p:'Duìbuqǐ, wǒ xìng Wáng.',d:'Entschuldigung, mein Nachname ist Wang.'},
-{u:1,h:'大家好，我叫马克。',p:'Dàjiā hǎo, wǒ jiào Mǎkè.',d:'Hallo zusammen, ich heiße Mark.'}, {u:1,h:'中文名字是马克。',p:'Zhōngwén míngzi shì Mǎkè.',d:'Der chinesische Name ist Mark.'},
-{u:2,h:'你是日本人吗？',p:'Nǐ shì Rìběnrén ma?',d:'Bist du Japaner/-in?'}, {u:2,h:'不是，我不是日本人。',p:'Bú shì, wǒ bú shì Rìběnrén.',d:'Nein, ich bin kein/-e Japaner/-in.'},
-{u:2,h:'你是哪里人？',p:'Nǐ shì nǎli rén?',d:'Woher kommst du?'}, {u:2,h:'我是中国人。',p:'Wǒ shì Zhōngguórén.',d:'Ich bin Chinese/Chinesin.'},
-{u:2,h:'你是哪国人？',p:'Nǐ shì nǎ guó rén?',d:'Welche Nationalität hast du?'}, {u:2,h:'我是英国人。',p:'Wǒ shì Yīngguórén.',d:'Ich bin Brite/Britin.'},
-{u:2,h:'你住在伦敦吗？',p:'Nǐ zhù zài Lúndūn ma?',d:'Wohnst du in London?'}, {u:2,h:'不，我住在北京。',p:'Bù, wǒ zhù zài Běijīng.',d:'Nein, ich wohne in Beijing.'},
-{u:2,h:'他们是电影明星。',p:'Tāmen shì diànyǐng míngxīng.',d:'Sie sind Filmstars.'}, {u:2,h:'但是他们不是美国人。',p:'Dànshì tāmen bú shì Měiguórén.',d:'Aber sie sind keine Amerikaner.'},
-{u:3,h:'她是你妹妹吗？',p:'Tā shì nǐ mèimei ma?',d:'Ist sie deine jüngere Schwester?'}, {u:3,h:'是，她是我妹妹。',p:'Shì, tā shì wǒ mèimei.',d:'Ja, sie ist meine jüngere Schwester.'},
-{u:3,h:'这是我弟弟。',p:'Zhè shì wǒ dìdi.',d:'Das ist mein jüngerer Bruder.'}, {u:3,h:'你妹妹和弟弟也是学生吗？',p:'Nǐ mèimei hé dìdi yě shì xuésheng ma?',d:'Sind deine Schwester und dein Bruder auch Schüler/Studenten?'},
-{u:3,h:'我弟弟是学生，但是我妹妹是记者。',p:'Wǒ dìdi shì xuésheng, dànshì wǒ mèimei shì jìzhě.',d:'Mein Bruder ist Schüler/Student, aber meine Schwester ist Journalistin.'},
-{u:3,h:'你爸爸做什么工作？',p:'Nǐ bàba zuò shénme gōngzuò?',d:'Was arbeitet dein Vater?'}, {u:3,h:'他是医生。',p:'Tā shì yīshēng.',d:'Er ist Arzt.'},
-{u:3,h:'你妈妈在哪里工作？',p:'Nǐ māma zài nǎli gōngzuò?',d:'Wo arbeitet deine Mutter?'}, {u:3,h:'她在医院工作。',p:'Tā zài yīyuàn gōngzuò.',d:'Sie arbeitet im Krankenhaus.'},
-{u:3,h:'爸爸妈妈都是医生。',p:'Bàba māma dōu shì yīshēng.',d:'Vater und Mutter sind beide Ärzte.'}, {u:3,h:'这是我家的照片。',p:'Zhè shì wǒ jiā de zhàopiàn.',d:'Das ist ein Foto meiner Familie.'},
-{u:4,h:'他是谁？',p:'Tā shì shéi?',d:'Wer ist er?'}, {u:4,h:'他是姚明，是吗？',p:'Tā shì Yáo Míng, shì ma?',d:'Er ist Yao Ming, oder?'},
-{u:4,h:'他是哪里人？',p:'Tā shì nǎli rén?',d:'Woher kommt er?'}, {u:4,h:'上海人，但是现在住在美国。',p:'Shànghǎirén, dànshì xiànzài zhù zài Měiguó.',d:'Er ist aus Shanghai, aber wohnt jetzt in den USA.'},
-{u:4,h:'他多大？',p:'Tā duō dà?',d:'Wie alt ist er?'}, {u:4,h:'我不知道。',p:'Wǒ bù zhīdào.',d:'Ich weiß es nicht.'},
-{u:4,h:'他真高！',p:'Tā zhēn gāo!',d:'Er ist wirklich groß!'}, {u:4,h:'也很帅，很酷！',p:'Yě hěn shuài, hěn kù!',d:'Auch sehr gutaussehend, sehr cool!'},
-{u:4,h:'他是我最喜欢的篮球运动员。',p:'Tā shì wǒ zuì xǐhuan de lánqiú yùndòngyuán.',d:'Er ist mein Lieblingsbasketballspieler.'}, {u:4,h:'最喜欢的动物是熊猫。',p:'Zuì xǐhuan de dòngwù shì xióngmāo.',d:'Das Lieblingstier ist der Panda.'},
-{u:5,h:'你的电话号码是55546998吗？',p:'Nǐ de diànhuà hàomǎ shì 55546998 ma?',d:'Ist deine Telefonnummer 55546998?'},
-{u:5,h:'这是我家的电话号码。',p:'Zhè shì wǒ jiā de diànhuà hàomǎ.',d:'Das ist meine Haustelefonnummer.'}, {u:5,h:'你的手机号码是多少？',p:'Nǐ de shǒujī hàomǎ shì duōshao?',d:'Wie lautet deine Handynummer?'},
-{u:5,h:'我的手机号码是12081345761。',p:'Wǒ de shǒujī hàomǎ shì 12081345761.',d:'Meine Handynummer ist 12081345761.'}, {u:5,h:'你住在哪里？',p:'Nǐ zhù zài nǎli?',d:'Wo wohnst du?'},
-{u:5,h:'我住在公园路19号。',p:'Wǒ zhù zài Gōngyuán Lù shíjiǔ hào.',d:'Ich wohne in der Parkstraße Nummer 19.'}, {u:5,h:'你的电子邮箱是什么？',p:'Nǐ de diànzǐ yóuxiāng shì shénme?',d:'Wie lautet deine E-Mail-Adresse?'},
-{u:5,h:'我的地址是大学路23号。',p:'Wǒ de dìzhǐ shì Dàxué Lù èrshísān hào.',d:'Meine Adresse ist Universitätsstraße 23.'}, {u:5,h:'你可以给我打电话。',p:'Nǐ kěyǐ gěi wǒ dǎ diànhuà.',d:'Du kannst mich anrufen.'},
-{u:5,h:'收到，谢谢！',p:'Shōudào, xièxie!',d:'Erhalten, danke!'}
-];
-
-const DIALOGUE_Q = [
-{u:1,q:'Wie fragt man auf Chinesisch nach dem Namen?',a:'你叫什么名字？'}, {u:1,q:'Wie sagt man: Ich heiße Wang Yu?',a:'我叫王玉。'},
-{u:2,q:'Wie fragt man: Woher kommst du?',a:'你是哪里人？'}, {u:2,q:'Wie sagt man: Ich wohne in Beijing?',a:'我住在北京。'},
-{u:3,q:'Wie fragt man nach dem Beruf des Vaters?',a:'你爸爸做什么工作？'}, {u:3,q:'Wie sagt man: Sie arbeitet im Krankenhaus?',a:'她在医院工作。'},
-{u:4,q:'Wie fragt man: Wer ist er?',a:'他是谁？'}, {u:4,q:'Wie sagt man: Ich weiß es nicht?',a:'我不知道。'},
-{u:5,q:'Wie fragt man nach der Handynummer?',a:'你的手机号码是多少？'}, {u:5,q:'Wie fragt man nach der E-Mail-Adresse?',a:'你的电子邮箱是什么？'}
-];
-
-const $ = (s)=>document.querySelector(s);
-const app = $('#app');
-const unitFilter = $('#unitFilter');
-const dirFilter = $('#directionFilter');
-const LS='chinese_exam_progress_v1';
-let tab='cards', current=null, flipped=false, chosen=[];
-let progress = JSON.parse(localStorage.getItem(LS)||'{}');
-
-for(let i=1;i<=5;i++){ const o=document.createElement('option'); o.value=i; o.textContent='Einheit '+i; unitFilter.appendChild(o); }
-function save(){localStorage.setItem(LS,JSON.stringify(progress)); renderStats();}
-function key(item,type='v'){return type+':'+item.u+':'+item.h;}
-function mark(item,ok,type='v'){const k=key(item,type); progress[k]=progress[k]||{ok:0,bad:0}; ok?progress[k].ok++:progress[k].bad++; save();}
-function pool(arr){let u=unitFilter.value; return arr.filter(x=>u==='all'||String(x.u)===u);}
-function pick(arr){arr=pool(arr); return arr[Math.floor(Math.random()*arr.length)];}
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-function norm(s){return (s||'').trim().toLowerCase().replace(/[，。！？?！.,;；:：\s]/g,'');}
-function renderStats(){
- let vals=Object.values(progress), ok=vals.reduce((a,b)=>a+b.ok,0), bad=vals.reduce((a,b)=>a+b.bad,0);
- let mastered=Object.entries(progress).filter(([k,v])=>v.ok>=3 && v.ok>v.bad).length;
- $('#stats').innerHTML=`<div class="stat"><b>${VOCAB.length}</b><span>Vokabeln</span></div><div class="stat"><b>${SENTENCES.length}</b><span>Sätze</span></div><div class="stat"><b>${ok}/${bad}</b><span>richtig/falsch</span></div><div class="stat"><b>${mastered}</b><span>beherrscht</span></div>`;
-}
-function src(u){return `<div class="source">Quelle: Einheit ${u}</div>`}
-function render(){
- if(tab==='cards') return renderCards(); if(tab==='write') return renderWrite(); if(tab==='order') return renderOrder(); if(tab==='cloze') return renderCloze(); if(tab==='dialogue') return renderDialogue(); if(tab==='exam') return renderExam(); if(tab==='list') return renderList();
-}
-function getCardPrompt(v){
- let mode=dirFilter.value; if(mode==='mixed') mode=['hanzi-de','de-hanzi','pinyin-hanzi'][Math.floor(Math.random()*3)];
- if(mode==='hanzi-de') return {q:v.h, sub:v.p, ans:v.d, type:'Bedeutung'};
- if(mode==='de-hanzi') return {q:v.d, sub:'Deutsch → Hanzi', ans:v.h+' · '+v.p, type:'Hanzi'};
- return {q:v.p, sub:'Pinyin → Hanzi', ans:v.h+' · '+v.d, type:'Hanzi'};
-}
-function renderCards(){ current=pick(VOCAB); flipped=false; drawCard(); }
-function drawCard(){ let c=getCardPrompt(current); app.innerHTML=`<h2>Flashcards</h2><div class="card" id="flip"><div class="hanzi">${c.q}</div><div class="pinyin">${c.sub}</div>${flipped?`<div class="meaning">${c.ans}</div>`:''}</div>${src(current.u)}<div class="row"><button class="primary" id="show">${flipped?'Nächste Karte':'Antwort zeigen'}</button>${flipped?'<button id="ok">Gewusst</button><button id="bad">Nicht gewusst</button>':''}</div>`;
- $('#show').onclick=()=>{ if(flipped) renderCards(); else {flipped=true; drawCard();}}; $('#flip').onclick=()=>{$('#show').click()}; if(flipped){$('#ok').onclick=()=>{mark(current,true);renderCards()};$('#bad').onclick=()=>{mark(current,false);renderCards()};}
-}
-function renderWrite(){ current=pick(VOCAB); let c=getCardPrompt(current); app.innerHTML=`<h2>Schreibmodus</h2><div class="question">${c.q}</div><div class="small">Gesucht: ${c.type}</div><input id="answer" autocomplete="off" placeholder="Antwort eintippen"><div id="fb" class="feedback"></div>${src(current.u)}<div class="row"><button class="primary" id="check">Prüfen</button><button id="next">Weiter</button></div>`; $('#check').onclick=()=>{let val=$('#answer').value; let ans=c.ans; let ok=norm(ans).includes(norm(val))||norm(val).includes(norm(current.h))||norm(val).includes(norm(current.d)); $('#fb').innerHTML= ok?`<span class="ok">Richtig.</span> ${ans}`:`<span class="bad">Falsch.</span> Richtig: ${ans}`; mark(current,ok)}; $('#next').onclick=renderWrite; $('#answer').focus();}
-function renderOrder(){ current=pick(SENTENCES); chosen=[]; drawOrder(); }
-function drawOrder(){ let words=current.h.replace(/[。？！]/g,'').split(/(?=[\u4e00-\u9fff])/).filter(Boolean); if(words.length>12) words=current.h.replace(/[，。？！]/g,'').match(/.{1,2}/g)||words; let chips=shuffle(words); app.innerHTML=`<h2>Satzbau</h2><div class="small">Baue den Satz: ${current.d}</div><div class="target" id="target"></div><div class="chips">${chips.map(w=>`<button class="chip">${w}</button>`).join('')}</div><div id="fb" class="feedback"></div>${src(current.u)}<div class="row"><button class="primary" id="check">Prüfen</button><button id="clear">Zurücksetzen</button><button id="next">Weiter</button></div>`; document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{chosen.push(b.textContent); b.classList.add('used'); b.disabled=true; $('#target').innerHTML=chosen.map(x=>`<span class="chip">${x}</span>`).join('')}); $('#check').onclick=()=>{let ok=norm(chosen.join(''))===norm(current.h); $('#fb').innerHTML=ok?`<span class="ok">Richtig.</span>`:`<span class="bad">Falsch.</span> Richtig: ${current.h} (${current.p})`; mark(current,ok,'s')}; $('#clear').onclick=drawOrder; $('#next').onclick=renderOrder; }
-function renderCloze(){ current=pick(SENTENCES); let chars=[...current.h].filter(ch=>/[\u4e00-\u9fff]/.test(ch)); let missing=chars[Math.floor(Math.random()*chars.length)]; let blank=current.h.replace(missing,'___'); app.innerHTML=`<h2>Lückentext</h2><div class="question hanzi">${blank}</div><div class="small">Bedeutung: ${current.d}</div><input id="answer" placeholder="fehlendes Hanzi"><div id="fb" class="feedback"></div>${src(current.u)}<div class="row"><button class="primary" id="check">Prüfen</button><button id="next">Weiter</button></div>`; $('#check').onclick=()=>{let ok=norm($('#answer').value)===norm(missing); $('#fb').innerHTML=ok?`<span class="ok">Richtig.</span>`:`<span class="bad">Falsch.</span> Richtig: ${missing} → ${current.h}`; mark(current,ok,'c')}; $('#next').onclick=renderCloze; $('#answer').focus();}
-function renderDialogue(){ current=pick(DIALOGUE_Q); app.innerHTML=`<h2>Dialogfragen</h2><div class="question">${current.q}</div><input id="answer" placeholder="Antwort auf Chinesisch"><div id="fb" class="feedback"></div>${src(current.u)}<div class="row"><button class="primary" id="check">Prüfen</button><button id="next">Weiter</button></div>`; $('#check').onclick=()=>{let ok=norm($('#answer').value)===norm(current.a); $('#fb').innerHTML=ok?`<span class="ok">Richtig.</span>`:`<span class="bad">Falsch.</span> Richtig: ${current.a}`; mark({u:current.u,h:current.q},ok,'d')}; $('#next').onclick=renderDialogue; $('#answer').focus();}
-let exam={qs:[],i:0,ok:0,bad:0,wrong:[]};
-function makeExamQ(){let type=['v','s','c','d'][Math.floor(Math.random()*4)]; if(type==='v'){let v=pick(VOCAB); let right=v.d; let opts=shuffle([right,...shuffle(VOCAB.filter(x=>x!==v)).slice(0,3).map(x=>x.d)]); return {type,q:v.h+' · '+v.p, opts, ans:right, u:v.u};} if(type==='s'){let s=pick(SENTENCES); return {type,q:'Übersetze: '+s.d, ans:s.h, u:s.u, input:true};} if(type==='c'){let s=pick(SENTENCES); let chars=[...s.h].filter(ch=>/[\u4e00-\u9fff]/.test(ch)); let m=chars[Math.floor(Math.random()*chars.length)]; return {type,q:s.h.replace(m,'___')+' · '+s.d, ans:m, u:s.u, input:true};} let d=pick(DIALOGUE_Q); return {type,q:d.q, ans:d.a, u:d.u, input:true};}
-function renderExam(start=false){ if(start){exam={qs:Array.from({length:25},makeExamQ),i:0,ok:0,bad:0,wrong:[]};} if(!exam.qs.length){app.innerHTML=`<h2>Klausurmodus</h2><p>25 gemischte Aufgaben aus allen Einheiten.</p><button class="primary" id="start">Starten</button>`; $('#start').onclick=()=>renderExam(true); return;} if(exam.i>=exam.qs.length){let pct=Math.round(exam.ok/exam.qs.length*100); app.innerHTML=`<h2>Ergebnis: ${pct}%</h2><p>Richtig: ${exam.ok} · Falsch: ${exam.bad}</p><div class="progressbar"><span style="width:${pct}%"></span></div><h3>Fehlerliste</h3>${exam.wrong.length?'<ul>'+exam.wrong.map(w=>`<li><b>${w.q}</b><br>Richtig: ${w.ans}</li>`).join('')+'</ul>':'<p>Keine Fehler.</p>'}<button class="primary" id="again">Neue Prüfung</button>`; $('#again').onclick=()=>renderExam(true); return;} let q=exam.qs[exam.i]; app.innerHTML=`<h2>Klausurmodus</h2><div class="small">Aufgabe ${exam.i+1}/${exam.qs.length} · Einheit ${q.u}</div><div class="question">${q.q}</div>${q.input?'<input id="answer" placeholder="Antwort"><div id="fb" class="feedback"></div><div class="row"><button class="primary" id="check">Prüfen</button></div>':`<div class="options">${q.opts.map(o=>`<button>${o}</button>`).join('')}</div><div id="fb" class="feedback"></div>`}`; function check(val){let ok=norm(val)===norm(q.ans); ok?exam.ok++:(exam.bad++,exam.wrong.push(q)); $('#fb').innerHTML=ok?'<span class="ok">Richtig.</span>':`<span class="bad">Falsch.</span> Richtig: ${q.ans}`; setTimeout(()=>{exam.i++; renderExam();},900)} if(q.input){$('#check').onclick=()=>check($('#answer').value); $('#answer').focus();} else document.querySelectorAll('.options button').forEach(b=>b.onclick=()=>check(b.textContent));}
-function renderList(){ let rows=pool(VOCAB).map(v=>`<tr><td>${v.u}</td><td class="hanzi" style="font-size:24px">${v.h}</td><td>${v.p}</td><td>${v.d}</td></tr>`).join(''); app.innerHTML=`<h2>Vokabelliste</h2><table class="table"><thead><tr><th>Einheit</th><th>Hanzi</th><th>Pinyin</th><th>Deutsch</th></tr></thead><tbody>${rows}</tbody></table>`;}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); tab=b.dataset.tab; render();}); unitFilter.onchange=render; dirFilter.onchange=render; $('#resetBtn').onclick=()=>{if(confirm('Fortschritt wirklich löschen?')){progress={};save();render();}}; renderStats(); render();
-
-  </script>
+  <script src="data.js?v=3"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
