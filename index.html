@@ -5,44 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#111111" />
   <title>Chinese Exam Trainer</title>
-  <link rel="manifest" href="manifest.json?v=3" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="topbar">
     <div>
       <h1>Chinese Exam Trainer</h1>
-      <p>Units 1–5 · Flashcards · Sentences · Cloze · Exam mode</p>
+      <p>Units 1–5 · Complete deduplicated course content</p>
     </div>
     <button id="resetBtn" class="ghost" type="button">Reset progress</button>
   </header>
 
   <main>
-    <section class="stats" id="stats"></section>
-
-    <nav class="tabs" aria-label="Training modes">
-      <button type="button" data-tab="cards" class="active">Flashcards</button>
-      <button type="button" data-tab="write">Writing</button>
-      <button type="button" data-tab="order">Sentence order</button>
-      <button type="button" data-tab="cloze">Cloze</button>
-      <button type="button" data-tab="dialogue">Dialogue</button>
-      <button type="button" data-tab="exam">Exam</button>
-      <button type="button" data-tab="list">Vocabulary</button>
-    </nav>
-
-    <section class="filters">
+    <section class="filters card">
       <label>Unit
-        <select id="unitFilter"></select>
+        <select id="unitSelect"></select>
       </label>
-      <label>Flashcard direction
-        <select id="directionFilter"></select>
+      <label>Direction
+        <select id="directionSelect">
+          <option value="hanzi-pinyin">Hanzi → Pinyin</option>
+          <option value="pinyin-hanzi">Pinyin → Hanzi</option>
+          <option value="hanzi-meaning">Hanzi → Meaning</option>
+          <option value="meaning-hanzi">Meaning → Hanzi</option>
+        </select>
       </label>
     </section>
 
-    <section id="app" class="panel"></section>
+    <section class="stats" id="stats"></section>
+
+    <nav class="tabs" aria-label="Training modes">
+      <button data-tab="cards" class="active">Flashcards</button>
+      <button data-tab="write">Writing</button>
+      <button data-tab="sentences">Sentences</button>
+      <button data-tab="cloze">Cloze</button>
+      <button data-tab="grammar">Grammar</button>
+      <button data-tab="exam">Exam</button>
+      <button data-tab="reference">Reference</button>
+    </nav>
+
+    <section id="panel" class="card panel"></section>
   </main>
 
-  <script src="data.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

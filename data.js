@@ -1,135 +1,111 @@
-const VOCAB = [
-// Unit 1
-{u:1,h:'你好',p:'nǐ hǎo',d:'hello; hi'}, {u:1,h:'你',p:'nǐ',d:'you'}, {u:1,h:'好',p:'hǎo',d:'good; OK'},
-{u:1,h:'请问',p:'qǐngwèn',d:'excuse me; may I ask?'}, {u:1,h:'请',p:'qǐng',d:'please; to invite'}, {u:1,h:'问',p:'wèn',d:'to ask'},
-{u:1,h:'叫',p:'jiào',d:'to be called; to call'}, {u:1,h:'什么',p:'shénme',d:'what'}, {u:1,h:'名字',p:'míngzi',d:'name'},
-{u:1,h:'我',p:'wǒ',d:'I; me'}, {u:1,h:'他',p:'tā',d:'he; him'}, {u:1,h:'她',p:'tā',d:'she; her'}, {u:1,h:'呢',p:'ne',d:'question particle; and you?'},
-{u:1,h:'认识',p:'rènshi',d:'to know; to meet'}, {u:1,h:'很',p:'hěn',d:'very; quite'}, {u:1,h:'高兴',p:'gāoxìng',d:'happy; pleased'},
-{u:1,h:'小姐',p:'xiǎojiě',d:'Miss; young lady'}, {u:1,h:'对不起',p:'duìbuqǐ',d:'sorry; excuse me'}, {u:1,h:'姓',p:'xìng',d:'surname; to be surnamed'},
-{u:1,h:'中文',p:'Zhōngwén',d:'Chinese language'}, {u:1,h:'你们',p:'nǐmen',d:'you plural'}, {u:1,h:'是',p:'shì',d:'to be'}, {u:1,h:'大家',p:'dàjiā',d:'everyone'},
-{u:1,h:'王',p:'Wáng',d:'Wang; a Chinese surname'}, {u:1,h:'玉',p:'Yù',d:'jade; Yu'}, {u:1,h:'马克',p:'Mǎkè',d:'Mark'},
-// Unit 2
-{u:2,h:'早上好',p:'zǎoshang hǎo',d:'good morning'}, {u:2,h:'日本',p:'Rìběn',d:'Japan'}, {u:2,h:'人',p:'rén',d:'person; people'},
-{u:2,h:'日本人',p:'Rìběnrén',d:'Japanese person'}, {u:2,h:'吗',p:'ma',d:'yes-no question particle'}, {u:2,h:'不',p:'bù',d:'not; no'},
-{u:2,h:'哪里',p:'nǎli',d:'where; from where'}, {u:2,h:'哪',p:'nǎ',d:'which'}, {u:2,h:'中国',p:'Zhōngguó',d:'China'}, {u:2,h:'中国人',p:'Zhōngguórén',d:'Chinese person'},
-{u:2,h:'国',p:'guó',d:'country; nation'}, {u:2,h:'英国',p:'Yīngguó',d:'United Kingdom; Britain'}, {u:2,h:'英国人',p:'Yīngguórén',d:'British person'},
-{u:2,h:'住',p:'zhù',d:'to live; to reside'}, {u:2,h:'在',p:'zài',d:'at; in; to be located'}, {u:2,h:'伦敦',p:'Lúndūn',d:'London'}, {u:2,h:'北京',p:'Běijīng',d:'Beijing'},
-{u:2,h:'他们',p:'tāmen',d:'they; them'}, {u:2,h:'电影',p:'diànyǐng',d:'film; movie'}, {u:2,h:'明星',p:'míngxīng',d:'star; celebrity'},
-{u:2,h:'电影明星',p:'diànyǐng míngxīng',d:'movie star'}, {u:2,h:'但是',p:'dànshì',d:'but'}, {u:2,h:'美国',p:'Měiguó',d:'United States; America'}, {u:2,h:'美国人',p:'Měiguórén',d:'American person'},
-{u:2,h:'青岛',p:'Qīngdǎo',d:'Qingdao'}, {u:2,h:'香港',p:'Xiānggǎng',d:'Hong Kong'}, {u:2,h:'法国',p:'Fǎguó',d:'France'}, {u:2,h:'法国人',p:'Fǎguórén',d:'French person'},
-{u:2,h:'德国',p:'Déguó',d:'Germany'}, {u:2,h:'德国人',p:'Déguórén',d:'German person'}, {u:2,h:'韩国',p:'Hánguó',d:'Korea'}, {u:2,h:'韩国人',p:'Hánguórén',d:'Korean person'},
-{u:2,h:'澳大利亚',p:'Àodàlìyà',d:'Australia'}, {u:2,h:'加拿大',p:'Jiānádà',d:'Canada'}, {u:2,h:'瑞士',p:'Ruìshì',d:'Switzerland'},
-// Unit 3
-{u:3,h:'爸爸',p:'bàba',d:'dad; father'}, {u:3,h:'妈妈',p:'māma',d:'mom; mother'}, {u:3,h:'姐姐',p:'jiějie',d:'older sister'},
-{u:3,h:'妹妹',p:'mèimei',d:'younger sister'}, {u:3,h:'哥哥',p:'gēge',d:'older brother'}, {u:3,h:'弟弟',p:'dìdi',d:'younger brother'},
-{u:3,h:'这',p:'zhè',d:'this'}, {u:3,h:'和',p:'hé',d:'and; with'}, {u:3,h:'也',p:'yě',d:'also; too'}, {u:3,h:'学生',p:'xuésheng',d:'student; pupil'},
-{u:3,h:'记者',p:'jìzhě',d:'journalist; reporter'}, {u:3,h:'做',p:'zuò',d:'to do; to make'}, {u:3,h:'工作',p:'gōngzuò',d:'work; job; to work'},
-{u:3,h:'医生',p:'yīshēng',d:'doctor'}, {u:3,h:'医院',p:'yīyuàn',d:'hospital'}, {u:3,h:'都',p:'dōu',d:'all; both'},
-{u:3,h:'家',p:'jiā',d:'family; home'}, {u:3,h:'的',p:'de',d:'possessive particle'}, {u:3,h:'照片',p:'zhàopiàn',d:'photo; photograph'},
-{u:3,h:'学校',p:'xuéxiào',d:'school'}, {u:3,h:'老师',p:'lǎoshī',d:'teacher'}, {u:3,h:'什么工作',p:'shénme gōngzuò',d:'what job; what work'},
-// Unit 4
-{u:4,h:'谁',p:'shéi',d:'who; whom'}, {u:4,h:'上海',p:'Shànghǎi',d:'Shanghai'}, {u:4,h:'上海人',p:'Shànghǎirén',d:'person from Shanghai'}, {u:4,h:'现在',p:'xiànzài',d:'now'},
-{u:4,h:'多大',p:'duō dà',d:'how old'}, {u:4,h:'岁',p:'suì',d:'years old'}, {u:4,h:'知道',p:'zhīdào',d:'to know'}, {u:4,h:'真',p:'zhēn',d:'really; truly'},
-{u:4,h:'高',p:'gāo',d:'tall; high'}, {u:4,h:'帅',p:'shuài',d:'handsome'}, {u:4,h:'酷',p:'kù',d:'cool'}, {u:4,h:'最',p:'zuì',d:'most; -est'},
-{u:4,h:'喜欢',p:'xǐhuan',d:'to like'}, {u:4,h:'篮球',p:'lánqiú',d:'basketball'}, {u:4,h:'运动员',p:'yùndòngyuán',d:'athlete; player'}, {u:4,h:'篮球运动员',p:'lánqiú yùndòngyuán',d:'basketball player'},
-{u:4,h:'姓名',p:'xìngmíng',d:'full name'}, {u:4,h:'年龄',p:'niánlíng',d:'age'}, {u:4,h:'出生地',p:'chūshēngdì',d:'place of birth'},
-{u:4,h:'国籍',p:'guójí',d:'nationality'}, {u:4,h:'电子邮箱',p:'diànzǐ yóuxiāng',d:'email address'}, {u:4,h:'动物',p:'dòngwù',d:'animal'},
-{u:4,h:'熊猫',p:'xióngmāo',d:'panda'}, {u:4,h:'可爱',p:'kě’ài',d:'cute; lovely'}, {u:4,h:'演员',p:'yǎnyuán',d:'actor; actress'},
-{u:4,h:'年轻',p:'niánqīng',d:'young'}, {u:4,h:'漂亮',p:'piàoliang',d:'pretty; beautiful'}, {u:4,h:'矮',p:'ǎi',d:'short; low'}, {u:4,h:'老',p:'lǎo',d:'old'},
-{u:4,h:'姚明',p:'Yáo Míng',d:'Yao Ming'},
-// Unit 5
-{u:5,h:'电话',p:'diànhuà',d:'telephone; phone'}, {u:5,h:'电话号码',p:'diànhuà hàomǎ',d:'phone number'}, {u:5,h:'号码',p:'hàomǎ',d:'number; code'}, {u:5,h:'手机',p:'shǒujī',d:'mobile phone'},
-{u:5,h:'手机号码',p:'shǒujī hàomǎ',d:'mobile phone number'}, {u:5,h:'多少',p:'duōshao',d:'how much; how many'}, {u:5,h:'公园',p:'gōngyuán',d:'park'}, {u:5,h:'路',p:'lù',d:'road; street; way'},
-{u:5,h:'号',p:'hào',d:'number; date'}, {u:5,h:'新',p:'xīn',d:'new'}, {u:5,h:'地址',p:'dìzhǐ',d:'address'}, {u:5,h:'大学',p:'dàxué',d:'university'}, {u:5,h:'大学路',p:'Dàxué Lù',d:'University Road'},
-{u:5,h:'公寓',p:'gōngyù',d:'apartment building'}, {u:5,h:'房间',p:'fángjiān',d:'room'}, {u:5,h:'可以',p:'kěyǐ',d:'can; may'}, {u:5,h:'给',p:'gěi',d:'to give; for; to'},
-{u:5,h:'打电话',p:'dǎ diànhuà',d:'to make a phone call'}, {u:5,h:'发件人',p:'fājiànrén',d:'sender'}, {u:5,h:'收到',p:'shōudào',d:'to receive; received'},
-{u:5,h:'谢谢',p:'xièxie',d:'thank you; thanks'}, {u:5,h:'收件箱',p:'shōujiànxiāng',d:'inbox'}, {u:5,h:'发送',p:'fāsòng',d:'to send'}, {u:5,h:'新短信',p:'xīn duǎnxìn',d:'new text message'}, {u:5,h:'退出',p:'tuìchū',d:'to exit; to log out'}
-];
-
-const SENTENCES = [
-// Unit 1: greetings and names
-{u:1,h:'你好！',p:'Nǐ hǎo!',d:'Hello!'}, {u:1,h:'大家好！',p:'Dàjiā hǎo!',d:'Hello everyone!'},
-{u:1,h:'请问，你叫什么名字？',p:'Qǐngwèn, nǐ jiào shénme míngzi?',d:'Excuse me, what is your name?'},
-{u:1,h:'你叫什么名字？',p:'Nǐ jiào shénme míngzi?',d:'What is your name?'}, {u:1,h:'我叫王玉。',p:'Wǒ jiào Wáng Yù.',d:'My name is Wang Yu.'},
-{u:1,h:'我叫马克。',p:'Wǒ jiào Mǎkè.',d:'My name is Mark.'}, {u:1,h:'你呢？',p:'Nǐ ne?',d:'And you?'},
-{u:1,h:'认识你很高兴。',p:'Rènshi nǐ hěn gāoxìng.',d:'Nice to meet you.'},
-{u:1,h:'认识你们很高兴。',p:'Rènshi nǐmen hěn gāoxìng.',d:'Nice to meet you all.'},
-{u:1,h:'对不起，我姓王。',p:'Duìbuqǐ, wǒ xìng Wáng.',d:'Sorry, my surname is Wang.'},
-{u:1,h:'我姓王。',p:'Wǒ xìng Wáng.',d:'My surname is Wang.'}, {u:1,h:'我的中文名字是马克。',p:'Wǒ de Zhōngwén míngzi shì Mǎkè.',d:'My Chinese name is Mark.'},
-{u:1,h:'中文名字是马克。',p:'Zhōngwén míngzi shì Mǎkè.',d:'The Chinese name is Mark.'},
-// Unit 2: nationality and residence
-{u:2,h:'早上好！',p:'Zǎoshang hǎo!',d:'Good morning!'}, {u:2,h:'你是日本人吗？',p:'Nǐ shì Rìběnrén ma?',d:'Are you Japanese?'},
-{u:2,h:'不是，我不是日本人。',p:'Bú shì, wǒ bú shì Rìběnrén.',d:'No, I am not Japanese.'},
-{u:2,h:'你是哪里人？',p:'Nǐ shì nǎli rén?',d:'Where are you from?'}, {u:2,h:'我是中国人。',p:'Wǒ shì Zhōngguórén.',d:'I am Chinese.'},
-{u:2,h:'我是德国人。',p:'Wǒ shì Déguórén.',d:'I am German.'}, {u:2,h:'我是英国人。',p:'Wǒ shì Yīngguórén.',d:'I am British.'},
-{u:2,h:'你是哪国人？',p:'Nǐ shì nǎ guó rén?',d:'What nationality are you?'},
-{u:2,h:'你住在哪里？',p:'Nǐ zhù zài nǎli?',d:'Where do you live?'}, {u:2,h:'你住在伦敦吗？',p:'Nǐ zhù zài Lúndūn ma?',d:'Do you live in London?'},
-{u:2,h:'不，我住在北京。',p:'Bù, wǒ zhù zài Běijīng.',d:'No, I live in Beijing.'}, {u:2,h:'我住在伦敦。',p:'Wǒ zhù zài Lúndūn.',d:'I live in London.'},
-{u:2,h:'他们是电影明星。',p:'Tāmen shì diànyǐng míngxīng.',d:'They are movie stars.'}, {u:2,h:'但是他们不是美国人。',p:'Dànshì tāmen bú shì Měiguórén.',d:'But they are not American.'},
-{u:2,h:'他是中国人，但是住在美国。',p:'Tā shì Zhōngguórén, dànshì zhù zài Měiguó.',d:'He is Chinese, but he lives in the United States.'},
-// Unit 3: family and jobs
-{u:3,h:'她是你妹妹吗？',p:'Tā shì nǐ mèimei ma?',d:'Is she your younger sister?'}, {u:3,h:'是，她是我妹妹。',p:'Shì, tā shì wǒ mèimei.',d:'Yes, she is my younger sister.'},
-{u:3,h:'这是我弟弟。',p:'Zhè shì wǒ dìdi.',d:'This is my younger brother.'}, {u:3,h:'这是我家的照片。',p:'Zhè shì wǒ jiā de zhàopiàn.',d:'This is a photo of my family.'},
-{u:3,h:'这是我爸爸和妈妈。',p:'Zhè shì wǒ bàba hé māma.',d:'These are my father and mother.'},
-{u:3,h:'你妹妹和弟弟也是学生吗？',p:'Nǐ mèimei hé dìdi yě shì xuésheng ma?',d:'Are your younger sister and younger brother also students?'},
-{u:3,h:'我弟弟是学生，但是我妹妹是记者。',p:'Wǒ dìdi shì xuésheng, dànshì wǒ mèimei shì jìzhě.',d:'My younger brother is a student, but my younger sister is a journalist.'},
-{u:3,h:'你爸爸做什么工作？',p:'Nǐ bàba zuò shénme gōngzuò?',d:'What does your father do for work?'}, {u:3,h:'他是医生。',p:'Tā shì yīshēng.',d:'He is a doctor.'},
-{u:3,h:'你妈妈在哪里工作？',p:'Nǐ māma zài nǎli gōngzuò?',d:'Where does your mother work?'}, {u:3,h:'她在医院工作。',p:'Tā zài yīyuàn gōngzuò.',d:'She works in a hospital.'},
-{u:3,h:'爸爸妈妈都是医生。',p:'Bàba māma dōu shì yīshēng.',d:'Dad and mom are both doctors.'},
-{u:3,h:'我爸爸是老师。',p:'Wǒ bàba shì lǎoshī.',d:'My father is a teacher.'}, {u:3,h:'我妈妈在学校工作。',p:'Wǒ māma zài xuéxiào gōngzuò.',d:'My mother works at a school.'},
-// Unit 4: age, appearance, preferences
-{u:4,h:'他是谁？',p:'Tā shì shéi?',d:'Who is he?'}, {u:4,h:'她是谁？',p:'Tā shì shéi?',d:'Who is she?'},
-{u:4,h:'他是姚明，是吗？',p:'Tā shì Yáo Míng, shì ma?',d:'He is Yao Ming, right?'}, {u:4,h:'他是哪里人？',p:'Tā shì nǎli rén?',d:'Where is he from?'},
-{u:4,h:'他是上海人。',p:'Tā shì Shànghǎirén.',d:'He is from Shanghai.'}, {u:4,h:'上海人，但是现在住在美国。',p:'Shànghǎirén, dànshì xiànzài zhù zài Měiguó.',d:'He is from Shanghai, but now he lives in the United States.'},
-{u:4,h:'他多大？',p:'Tā duō dà?',d:'How old is he?'}, {u:4,h:'你多大？',p:'Nǐ duō dà?',d:'How old are you?'},
-{u:4,h:'我不知道。',p:'Wǒ bù zhīdào.',d:'I do not know.'}, {u:4,h:'他真高！',p:'Tā zhēn gāo!',d:'He is really tall!'},
-{u:4,h:'也很帅，很酷！',p:'Yě hěn shuài, hěn kù!',d:'Also very handsome and very cool!'}, {u:4,h:'她很漂亮。',p:'Tā hěn piàoliang.',d:'She is very pretty.'},
-{u:4,h:'熊猫很可爱。',p:'Xióngmāo hěn kě’ài.',d:'Pandas are very cute.'},
-{u:4,h:'他是我最喜欢的篮球运动员。',p:'Tā shì wǒ zuì xǐhuan de lánqiú yùndòngyuán.',d:'He is my favorite basketball player.'},
-{u:4,h:'最喜欢的动物是熊猫。',p:'Zuì xǐhuan de dòngwù shì xióngmāo.',d:'The favorite animal is the panda.'},
-{u:4,h:'我最喜欢的动物是熊猫。',p:'Wǒ zuì xǐhuan de dòngwù shì xióngmāo.',d:'My favorite animal is the panda.'},
-{u:4,h:'姓名是什么？',p:'Xìngmíng shì shénme?',d:'What is the full name?'}, {u:4,h:'国籍是什么？',p:'Guójí shì shénme?',d:'What is the nationality?'},
-{u:4,h:'出生地是哪里？',p:'Chūshēngdì shì nǎli?',d:'Where is the place of birth?'},
-// Unit 5: numbers, phone, address, email
-{u:5,h:'你的电话号码是55546998吗？',p:'Nǐ de diànhuà hàomǎ shì 55546998 ma?',d:'Is your phone number 55546998?'},
-{u:5,h:'这是我家的电话号码。',p:'Zhè shì wǒ jiā de diànhuà hàomǎ.',d:'This is my home phone number.'},
-{u:5,h:'你的手机号码是多少？',p:'Nǐ de shǒujī hàomǎ shì duōshao?',d:'What is your mobile phone number?'},
-{u:5,h:'我的手机号码是12081345761。',p:'Wǒ de shǒujī hàomǎ shì 12081345761.',d:'My mobile phone number is 12081345761.'},
-{u:5,h:'你住在哪里？',p:'Nǐ zhù zài nǎli?',d:'Where do you live?'}, {u:5,h:'我住在公园路19号。',p:'Wǒ zhù zài Gōngyuán Lù shíjiǔ hào.',d:'I live at 19 Park Road.'},
-{u:5,h:'你的地址是什么？',p:'Nǐ de dìzhǐ shì shénme?',d:'What is your address?'}, {u:5,h:'我的地址是大学路23号。',p:'Wǒ de dìzhǐ shì Dàxué Lù èrshísān hào.',d:'My address is 23 University Road.'},
-{u:5,h:'你的电子邮箱是什么？',p:'Nǐ de diànzǐ yóuxiāng shì shénme?',d:'What is your email address?'},
-{u:5,h:'我的电子邮箱是马克。',p:'Wǒ de diànzǐ yóuxiāng shì Mǎkè.',d:'My email address is Mark.'},
-{u:5,h:'你可以给我打电话。',p:'Nǐ kěyǐ gěi wǒ dǎ diànhuà.',d:'You can call me.'}, {u:5,h:'可以给我打电话吗？',p:'Kěyǐ gěi wǒ dǎ diànhuà ma?',d:'Can you call me?'},
-{u:5,h:'收到，谢谢！',p:'Shōudào, xièxie!',d:'Received, thank you!'}, {u:5,h:'我收到新短信。',p:'Wǒ shōudào xīn duǎnxìn.',d:'I received a new text message.'},
-{u:5,h:'发件人是谁？',p:'Fājiànrén shì shéi?',d:'Who is the sender?'}, {u:5,h:'请发送短信。',p:'Qǐng fāsòng duǎnxìn.',d:'Please send a text message.'}
-];
-
-const DIALOGUE_Q = [
-// Unit 1
-{u:1,q:'How do you ask for someone’s name in Chinese?',a:'你叫什么名字？'}, {u:1,q:'How do you politely ask: “May I ask, what is your name?”',a:'请问，你叫什么名字？'},
-{u:1,q:'How do you say: “My name is Wang Yu.”',a:'我叫王玉。'}, {u:1,q:'How do you say: “And you?”',a:'你呢？'},
-{u:1,q:'How do you say: “Nice to meet you.”',a:'认识你很高兴。'}, {u:1,q:'How do you say: “My surname is Wang.”',a:'我姓王。'},
-{u:1,q:'How do you say: “Hello everyone!”',a:'大家好！'}, {u:1,q:'How do you say: “My Chinese name is Mark.”',a:'我的中文名字是马克。'},
-// Unit 2
-{u:2,q:'How do you ask: “Are you Japanese?”',a:'你是日本人吗？'}, {u:2,q:'How do you answer: “No, I am not Japanese.”',a:'不是，我不是日本人。'},
-{u:2,q:'How do you ask: “Where are you from?”',a:'你是哪里人？'}, {u:2,q:'How do you ask: “What nationality are you?”',a:'你是哪国人？'},
-{u:2,q:'How do you say: “I am Chinese.”',a:'我是中国人。'}, {u:2,q:'How do you say: “I am German.”',a:'我是德国人。'},
-{u:2,q:'How do you ask: “Do you live in London?”',a:'你住在伦敦吗？'}, {u:2,q:'How do you say: “I live in Beijing.”',a:'我住在北京。'},
-{u:2,q:'How do you say: “They are movie stars.”',a:'他们是电影明星。'}, {u:2,q:'How do you say: “But they are not American.”',a:'但是他们不是美国人。'},
-// Unit 3
-{u:3,q:'How do you ask: “Is she your younger sister?”',a:'她是你妹妹吗？'}, {u:3,q:'How do you say: “This is my younger brother.”',a:'这是我弟弟。'},
-{u:3,q:'How do you ask about the father’s job?',a:'你爸爸做什么工作？'}, {u:3,q:'How do you say: “He is a doctor.”',a:'他是医生。'},
-{u:3,q:'How do you ask: “Where does your mother work?”',a:'你妈妈在哪里工作？'}, {u:3,q:'How do you say: “She works in a hospital.”',a:'她在医院工作。'},
-{u:3,q:'How do you say: “Dad and mom are both doctors.”',a:'爸爸妈妈都是医生。'}, {u:3,q:'How do you say: “This is a photo of my family.”',a:'这是我家的照片。'},
-// Unit 4
-{u:4,q:'How do you ask: “Who is he?”',a:'他是谁？'}, {u:4,q:'How do you ask: “How old is he?”',a:'他多大？'},
-{u:4,q:'How do you say: “I do not know.”',a:'我不知道。'}, {u:4,q:'How do you say: “He is really tall!”',a:'他真高！'},
-{u:4,q:'How do you say: “He is my favorite basketball player.”',a:'他是我最喜欢的篮球运动员。'}, {u:4,q:'How do you say: “Pandas are very cute.”',a:'熊猫很可爱。'},
-{u:4,q:'How do you ask: “Where is he from?”',a:'他是哪里人？'}, {u:4,q:'How do you say: “He is from Shanghai.”',a:'他是上海人。'},
-// Unit 5
-{u:5,q:'How do you ask for someone’s mobile phone number?',a:'你的手机号码是多少？'}, {u:5,q:'How do you ask for someone’s phone number?',a:'你的电话号码是多少？'},
-{u:5,q:'How do you ask: “Where do you live?”',a:'你住在哪里？'}, {u:5,q:'How do you ask for someone’s address?',a:'你的地址是什么？'},
-{u:5,q:'How do you ask for someone’s email address?',a:'你的电子邮箱是什么？'}, {u:5,q:'How do you say: “I live at 19 Park Road.”',a:'我住在公园路19号。'},
-{u:5,q:'How do you say: “You can call me.”',a:'你可以给我打电话。'}, {u:5,q:'How do you say: “Received, thank you!”',a:'收到，谢谢！'},
-{u:5,q:'How do you ask: “Who is the sender?”',a:'发件人是谁？'}, {u:5,q:'How do you say: “Please send a text message.”',a:'请发送短信。'}
-];
+window.COURSE_DATA = {
+  title: "Chinese Exam Trainer",
+  sourceNote: "Deduplicated from the uploaded A1.1 course slides, Units 1–5.",
+  units: [
+    {
+      id: 1,
+      title: "Einheit 1 · Begrüßung und Namen",
+      vocab: [
+        ["我","wǒ","ich"],["我们","wǒmen","wir"],["你","nǐ","du"],["你们","nǐmen","ihr/Sie (Plural)"],["他","tā","er"],["她","tā","sie"],
+        ["老师","lǎoshī","Lehrer/in"],["学生","xuéshēng","Student/in, Schüler/in"],["大家","dàjiā","alle"],["好","hǎo","gut"],["你好","nǐ hǎo","Hallo"],["早","zǎo","früh; Guten Morgen"],["早上好","zǎoshang hǎo","Guten Morgen"],
+        ["姓","xìng","Familienname; heißen"],["什么","shénme","was"],["叫","jiào","heißen"],["名字","míngzi","Name"],["呢","ne","und …?"],["请问","qǐngwèn","Entschuldigen Sie, darf ich fragen"],
+        ["先生","xiānsheng","Herr"],["小姐","xiǎojiě","Frau/Fräulein"],["太太","tàitai","Frau; Ehefrau"],["中文","Zhōngwén","Chinesisch"],["汉字","Hànzì","chinesische Schriftzeichen"],["写","xiě","schreiben"],
+        ["认识","rènshi","kennenlernen; kennen"],["很","hěn","sehr"],["高兴","gāoxìng","froh"],["对不起","duìbuqǐ","Entschuldigung"],["没关系","méi guānxi","Macht nichts"],["课文","kèwén","Lektionstext"],["生词","shēngcí","neue Wörter"],["练习","liànxí","Übung"]
+      ],
+      sentences: [
+        ["大家好！","Dàjiā hǎo!","Hallo zusammen!"],["老师好！","Lǎoshī hǎo!","Guten Tag, Lehrer/in!"],["大家早！","Dàjiā zǎo!","Guten Morgen zusammen!"],
+        ["我是老师。","Wǒ shì lǎoshī.","Ich bin Lehrer/in."],["你是学生。","Nǐ shì xuéshēng.","Du bist Student/in."],["我们是学生。","Wǒmen shì xuéshēng.","Wir sind Studenten."],
+        ["你姓什么？","Nǐ xìng shénme?","Wie ist dein Familienname?"],["我姓王。","Wǒ xìng Wáng.","Mein Familienname ist Wang."],["你叫什么名字？","Nǐ jiào shénme míngzi?","Wie heißt du?"],["我叫马克。","Wǒ jiào Mǎkè.","Ich heiße Mark."],
+        ["他叫什么名字？","Tā jiào shénme míngzi?","Wie heißt er?"],["她姓什么？","Tā xìng shénme?","Wie ist ihr Familienname?"],["你呢？","Nǐ ne?","Und du?"],
+        ["请问，你叫什么名字？","Qǐngwèn, nǐ jiào shénme míngzi?","Entschuldigung, wie heißen Sie?"],["很高兴认识你。","Hěn gāoxìng rènshi nǐ.","Freut mich, dich kennenzulernen."],["认识你们很高兴。","Rènshi nǐmen hěn gāoxìng.","Es freut mich, euch kennenzulernen."],
+        ["我认识他。","Wǒ rènshi tā.","Ich kenne ihn."],["对不起。","Duìbuqǐ.","Entschuldigung."],["没关系。","Méi guānxi.","Macht nichts."]
+      ],
+      grammar: [
+        ["A 是 B","我是学生。","A ist B"],["姓 + Familienname","我姓李。","Familiennamen angeben"],["叫 + Name","我叫安娜。","vollständigen oder gegebenen Namen angeben"],["呢","你呢？","Rückfrage: und du?"],["很高兴认识…","很高兴认识你。","Begrüßungsformel"]
+      ]
+    },
+    {
+      id: 2,
+      title: "Einheit 2 · Länder, Herkunft und Wohnort",
+      vocab: [
+        ["人","rén","Mensch; Person"],["中国","Zhōngguó","China"],["中国人","Zhōngguórén","Chinese/Chinesin"],["德国","Déguó","Deutschland"],["德国人","Déguórén","Deutsche/r"],
+        ["英国","Yīngguó","Großbritannien"],["英国人","Yīngguórén","Brite/Britin"],["美国","Měiguó","USA"],["美国人","Měiguórén","US-Amerikaner/in"],["法国","Fǎguó","Frankreich"],["法国人","Fǎguórén","Franzose/Französin"],
+        ["日本","Rìběn","Japan"],["日本人","Rìběnrén","Japaner/in"],["台湾","Táiwān","Taiwan"],["哪里","nǎlǐ","wo"],["哪","nǎ","welcher/e/es"],["国","guó","Land"],
+        ["住","zhù","wohnen"],["住在","zhù zài","wohnen in"],["北京","Běijīng","Peking"],["伦敦","Lúndūn","London"],["慕尼黑","Mùníhēi","München"],["吗","ma","Fragepartikel"],["不","bù","nicht"],["是","shì","sein"]
+      ],
+      sentences: [
+        ["你是哪国人？","Nǐ shì nǎ guó rén?","Aus welchem Land kommst du?"],["你是哪里人？","Nǐ shì nǎlǐ rén?","Woher kommst du?"],["我是中国人。","Wǒ shì Zhōngguórén.","Ich bin Chinese/Chinesin."],["我是德国人。","Wǒ shì Déguórén.","Ich bin Deutsche/r."],
+        ["你是日本人吗？","Nǐ shì Rìběnrén ma?","Bist du Japaner/in?"],["我不是日本人。","Wǒ bú shì Rìběnrén.","Ich bin kein/e Japaner/in."],["你住在哪里？","Nǐ zhù zài nǎlǐ?","Wo wohnst du?"],["我住在慕尼黑。","Wǒ zhù zài Mùníhēi.","Ich wohne in München."],
+        ["你住在伦敦吗？","Nǐ zhù zài Lúndūn ma?","Wohnst du in London?"],["我不住在伦敦。","Wǒ bú zhù zài Lúndūn.","Ich wohne nicht in London."],["他不是李先生。","Tā bú shì Lǐ xiānsheng.","Er ist nicht Herr Li."],
+        ["你是老师吗？","Nǐ shì lǎoshī ma?","Bist du Lehrer/in?"],["我是学生。","Wǒ shì xuéshēng.","Ich bin Student/in."],["我不是老师。","Wǒ bú shì lǎoshī.","Ich bin nicht Lehrer/in."]
+      ],
+      grammar: [
+        ["…吗？","你是学生吗？","Ja/Nein-Frage"],["不 + Verb","我不住在北京。","Verneinung"],["不是","我不是老师。","Negation von 是"],["住在 + Ort","我住在慕尼黑。","Wohnort angeben"],["哪国人 / 哪里人","你是哪国人？","Herkunft erfragen"]
+      ]
+    },
+    {
+      id: 3,
+      title: "Einheit 3 · Familie, Berufe und 的 / 也 / 都",
+      vocab: [
+        ["爸爸","bàba","Vater"],["妈妈","māma","Mutter"],["哥哥","gēge","älterer Bruder"],["姐姐","jiějie","ältere Schwester"],["弟弟","dìdi","jüngerer Bruder"],["妹妹","mèimei","jüngere Schwester"],["和","hé","und"],
+        ["谁","shéi","wer"],["的","de","Possessivpartikel"],["医生","yīshēng","Arzt/Ärztin"],["记者","jìzhě","Journalist/in"],["工作","gōngzuò","arbeiten; Arbeit"],["做","zuò","machen"],["什么工作","shénme gōngzuò","welchen Beruf"],
+        ["也","yě","auch"],["都","dōu","alle; beide"],["英语","Yīngyǔ","Englisch"],["英文","Yīngwén","englische Sprache/Schrift"],["法文","Fǎwén","Französisch"],["德文","Déwén","Deutsch"],["日文","Rìwén","Japanisch"],
+        ["医院","yīyuàn","Krankenhaus"],["学校","xuéxiào","Schule"],["在","zài","in; an; sich befinden"],["照片","zhàopiàn","Foto"],["家","jiā","Familie; Zuhause"],["电影明星","diànyǐng míngxīng","Filmstar"]
+      ],
+      sentences: [
+        ["妈妈和爸爸。","Māma hé bàba.","Mutter und Vater."],["这是姐姐和弟弟。","Zhè shì jiějie hé dìdi.","Das sind die ältere Schwester und der jüngere Bruder."],["这是谁？","Zhè shì shéi?","Wer ist das?"],["这是王先生和林小姐。","Zhè shì Wáng xiānsheng hé Lín xiǎojiě.","Das sind Herr Wang und Frau Lin."],
+        ["这是我的妈妈。","Zhè shì wǒ de māma.","Das ist meine Mutter."],["这是李先生的太太。","Zhè shì Lǐ xiānsheng de tàitai.","Das ist Herrn Lis Ehefrau."],["你妈妈的姓是什么？","Nǐ māma de xìng shì shénme?","Wie lautet der Familienname deiner Mutter?"],
+        ["你是医生吗？","Nǐ shì yīshēng ma?","Bist du Arzt/Ärztin?"],["我不是记者。","Wǒ bú shì jìzhě.","Ich bin kein/e Journalist/in."],["我也不是医生。","Wǒ yě bú shì yīshēng.","Ich bin auch kein/e Arzt/Ärztin."],
+        ["你做什么工作？","Nǐ zuò shénme gōngzuò?","Was arbeitest du?"],["她是记者。","Tā shì jìzhě.","Sie ist Journalistin."],["你工作吗？","Nǐ gōngzuò ma?","Arbeitest du?"],["我不工作。","Wǒ bù gōngzuò.","Ich arbeite nicht."],
+        ["我们都是学生。","Wǒmen dōu shì xuéshēng.","Wir sind alle Studenten."],["他们都是医生。","Tāmen dōu shì yīshēng.","Sie sind beide/alle Ärzte."],["我爸爸妈妈都是老师。","Wǒ bàba māma dōu shì lǎoshī.","Meine Eltern sind beide Lehrer."],
+        ["我们不都是德国人。","Wǒmen bù dōu shì Déguórén.","Nicht alle von uns sind Deutsche."],["我们都不是德国人。","Wǒmen dōu bú shì Déguórén.","Keiner von uns ist deutsch."],["我在医院工作。","Wǒ zài yīyuàn gōngzuò.","Ich arbeite im Krankenhaus."],["你在哪里工作？","Nǐ zài nǎlǐ gōngzuò?","Wo arbeitest du?"]
+      ],
+      grammar: [
+        ["A 和 B","妈妈和爸爸","A und B"],["A 的 B","我的妈妈","Besitz/Zugehörigkeit"],["也 + Prädikat","我也是学生。","auch"],["都 + Prädikat","我们都是学生。","alle/beide"],["不都 vs. 都不","我们不都是… / 我们都不是…","nicht alle vs. keiner"],["在 + Ort + Verb","我在医院工作。","Handlung an einem Ort"]
+      ]
+    },
+    {
+      id: 4,
+      title: "Einheit 4 · Alter, persönliche Angaben und Vorlieben",
+      vocab: [
+        ["几","jǐ","wie viele (kleine Zahl)"],["岁","suì","Jahre alt"],["年龄","niánlíng","Alter"],["多大","duō dà","wie alt"],["今年","jīnnián","dieses Jahr"],["出生","chūshēng","geboren werden"],["出生地","chūshēngdì","Geburtsort"],["国籍","guójí","Staatsangehörigkeit"],
+        ["喜欢","xǐhuan","mögen"],["喝","hē","trinken"],["吃","chī","essen"],["咖啡","kāfēi","Kaffee"],["茶","chá","Tee"],["水","shuǐ","Wasser"],["可乐","kělè","Cola"],["披萨","pīsà","Pizza"],
+        ["学习","xuéxí","lernen"],["学","xué","lernen"],["中文","Zhōngwén","Chinesisch"],["常常","chángcháng","oft"],["电影","diànyǐng","Film"],["演员","yǎnyuán","Schauspieler/in"],["歌手","gēshǒu","Sänger/in"],["运动员","yùndòngyuán","Sportler/in"],
+        ["男","nán","männlich"],["女","nǚ","weiblich"],["朋友","péngyou","Freund/in"],["同学","tóngxué","Mitschüler/in; Kommilitone/in"],["知道","zhīdào","wissen"],["个人信息","gèrén xìnxī","persönliche Angaben"],["姓名","xìngmíng","vollständiger Name"]
+      ],
+      sentences: [
+        ["你几岁？","Nǐ jǐ suì?","Wie alt bist du?"],["你多大？","Nǐ duō dà?","Wie alt bist du?"],["我二十岁。","Wǒ èrshí suì.","Ich bin zwanzig Jahre alt."],["他今年十九岁。","Tā jīnnián shíjiǔ suì.","Er ist dieses Jahr neunzehn."],
+        ["你的出生地是哪里？","Nǐ de chūshēngdì shì nǎlǐ?","Wo ist dein Geburtsort?"],["我的出生地是慕尼黑。","Wǒ de chūshēngdì shì Mùníhēi.","Mein Geburtsort ist München."],["你的国籍是什么？","Nǐ de guójí shì shénme?","Welche Staatsangehörigkeit hast du?"],
+        ["我喜欢咖啡。","Wǒ xǐhuan kāfēi.","Ich mag Kaffee."],["我喝茶。","Wǒ hē chá.","Ich trinke Tee."],["我常常喝咖啡。","Wǒ chángcháng hē kāfēi.","Ich trinke oft Kaffee."],["我吃披萨。","Wǒ chī pīsà.","Ich esse Pizza."],
+        ["我学中文。","Wǒ xué Zhōngwén.","Ich lerne Chinesisch."],["他是电影明星。","Tā shì diànyǐng míngxīng.","Er ist ein Filmstar."],["她是演员。","Tā shì yǎnyuán.","Sie ist Schauspielerin."],["我不知道。","Wǒ bù zhīdào.","Ich weiß es nicht."],
+        ["这是我妈妈的学校照片。","Zhè shì wǒ māma de xuéxiào zhàopiàn.","Das ist ein Foto von der Schule meiner Mutter."],["我是慕尼黑理工大学的学生。","Wǒ shì Mùníhēi Lǐgōng Dàxué de xuéshēng.","Ich bin Student/in an der TUM."]
+      ],
+      grammar: [
+        ["几 + Zähleinheit","你几岁？","kleine, erwartete Zahl erfragen"],["多大","你多大？","Alter erfragen"],["喜欢 + Nomen","我喜欢咖啡。","Vorlieben"],["常常 + Verb","我常常喝茶。","Häufigkeit"],["A 的 B","我妈妈的学校照片","mehrgliedrige Zugehörigkeit"]
+      ]
+    },
+    {
+      id: 5,
+      title: "Einheit 5 · Kontaktdaten, Adressen und Kommunikation",
+      vocab: [
+        ["手机","shǒujī","Handy"],["号","hào","Nummer"],["号码","hàomǎ","Nummer"],["手机号码","shǒujī hàomǎ","Handynummer"],["学号","xuéhào","Matrikel-/Studentennummer"],["电话","diànhuà","Telefon"],["电话号码","diànhuà hàomǎ","Telefonnummer"],["电子邮箱","diànzǐ yóuxiāng","E-Mail-Adresse"],["地址","dìzhǐ","Adresse"],["多少","duōshǎo","wie viel/wie viele"],
+        ["公园","gōngyuán","Park"],["路","lù","Straße"],["办公室","bàngōngshì","Büro"],["公寓","gōngyù","Wohnung"],["学生公寓","xuéshēng gōngyù","Studentenwohnheim"],["大学生公寓","dàxuéshēng gōngyù","Studentenwohnheim"],["房间","fángjiān","Zimmer"],["房","fáng","Zimmer"],["大学","dàxué","Universität"],
+        ["打电话","dǎ diànhuà","anrufen"],["给","gěi","für; an"],["可以","kěyǐ","können; dürfen"],["短信","duǎnxìn","SMS"],["发短信","fā duǎnxìn","eine SMS senden"],["收件人","shōujiànrén","Empfänger/in"],["发件人","fājiànrén","Absender/in"],["收到","shōudào","erhalten; angekommen"],["新短信","xīn duǎnxìn","neue SMS"],
+        ["大学生","dàxuéshēng","Universitätsstudent/in"],["中学生","zhōngxuéshēng","Mittelschüler/in"],["小学生","xiǎoxuéshēng","Grundschüler/in"],["慕尼黑理工大学","Mùníhēi Lǐgōng Dàxué","Technische Universität München"],
+        ["新","xīn","neu"],["谢谢","xièxie","danke"],["不谢","bú xiè","gern geschehen"],["不客气","bú kèqi","gern geschehen"],["问题","wèntí","Frage; Problem"],["大家","dàjiā","alle"],["暑假","shǔjià","Sommerferien"],["快乐","kuàilè","fröhlich"]
+      ],
+      sentences: [
+        ["这是谁的手机？","Zhè shì shéi de shǒujī?","Wessen Handy ist das?"],["这是马太太的手机。","Zhè shì Mǎ tàitai de shǒujī.","Das ist Frau Mas Handy."],["你的手机号码是多少？","Nǐ de shǒujī hàomǎ shì duōshǎo?","Wie lautet deine Handynummer?"],
+        ["他的学号是多少？","Tā de xuéhào shì duōshǎo?","Wie lautet seine Studentennummer?"],["你的电子邮箱是什么？","Nǐ de diànzǐ yóuxiāng shì shénme?","Wie lautet deine E-Mail-Adresse?"],["你的地址是什么？","Nǐ de dìzhǐ shì shénme?","Wie lautet deine Adresse?"],
+        ["我住在公园路十九号。","Wǒ zhù zài Gōngyuán Lù shíjiǔ hào.","Ich wohne in der Parkstraße 19."],["他们住在哪里？","Tāmen zhù zài nǎlǐ?","Wo wohnen sie?"],["林老师的办公室在哪里？","Lín lǎoshī de bàngōngshì zài nǎlǐ?","Wo ist Lehrer Lins Büro?"],
+        ["林老师办公室的电话是多少？","Lín lǎoshī bàngōngshì de diànhuà shì duōshǎo?","Wie lautet die Telefonnummer von Lehrer Lins Büro?"],["我是慕尼黑理工大学的学生。","Wǒ shì Mùníhēi Lǐgōng Dàxué de xuéshēng.","Ich bin Student/in an der TUM."],
+        ["这是我的新地址。","Zhè shì wǒ de xīn dìzhǐ.","Das ist meine neue Adresse."],["你住在学生公寓吗？","Nǐ zhù zài xuéshēng gōngyù ma?","Wohnst du im Studentenwohnheim?"],["他住在大学生公寓三号房。","Tā zhù zài dàxuéshēng gōngyù sān hào fáng.","Er wohnt in Zimmer 3 des Studentenwohnheims."],
+        ["我给姐姐打电话。","Wǒ gěi jiějie dǎ diànhuà.","Ich rufe meine ältere Schwester an."],["你可以给我打电话。","Nǐ kěyǐ gěi wǒ dǎ diànhuà.","Du kannst mich anrufen."],["你有问题，可以给我发短信。","Nǐ yǒu wèntí, kěyǐ gěi wǒ fā duǎnxìn.","Bei Fragen kannst du mir eine SMS schicken."],
+        ["收到，谢谢！","Shōudào, xièxie!","Erhalten, danke!"],["安娜也住在大学路吗？","Ānnà yě zhù zài Dàxué Lù ma?","Wohnt Anna auch in der Universitätsstraße?"],["谢谢大家！","Xièxie dàjiā!","Danke an alle!"],["暑假快乐！","Shǔjià kuàilè!","Schöne Sommerferien!"]
+      ],
+      grammar: [
+        ["A 的 B","我的手机","Besitz/Zugehörigkeit"],["谁的 + Nomen","这是谁的手机？","Besitzer erfragen"],["号码是多少","你的号码是多少？","Nummer erfragen"],["地址/邮箱是什么","你的地址是什么？","nichtnumerische Angabe erfragen"],["住在 + Adresse","我住在公园路十九号。","Wohnadresse"],["给 + Person + Verb","我给妈妈发短信。","Empfänger einer Handlung"],["可以 + Verb","你可以给我打电话。","Möglichkeit/Erlaubnis"],["新(的) + Nomen","新地址 / 新的地址","Attribut mit 新"]
+      ]
+    }
+  ]
+};

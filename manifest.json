@@ -1,9 +1,9 @@
 {
   "name": "Chinese Exam Trainer",
   "short_name": "Chinese Trainer",
-  "start_url": "./?v=3",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f5f5f5",
+  "background_color": "#f4f4f1",
   "theme_color": "#111111",
-  "description": "Private Chinese flashcard and exam trainer for units 1 to 5."
+  "description": "A1.1 Chinese trainer for Units 1–5"
 }
